@@ -1,0 +1,74 @@
+<div class="card">
+  <div class="card-header">Add Course</div>
+  <div class="card-body">
+    <!-- There are 2 ways of validating & getting data from Form. First one is Reactive & second one is Template-driven. Here we will be using template-driven -->
+    <form #courseFrom="ngForm" (ngSubmit)="onSubmit(courseFrom)">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          aria-describedby="emailHelp"
+          placeholder="Enter Your Title"
+          id="title"
+          name="title"
+          #title="ngModel"
+          [(ngModel)]="course.title"
+          required
+        />
+        <!-- We have to import NgIf or Common module in the .ts file. But it's not the case in ngModule because everything is imported in the ngModule project. -->
+        <div *ngIf="title.invalid && title.touched" class="text-danger">
+          Title required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          rows="3"
+          class="form-control"
+          placeholder="Enter Description"
+          id="description"
+          name="description"
+          #description="ngModel"
+          [(ngModel)]="course.description"
+          required
+        ></textarea>
+
+        <!-- Another way of writing if block -->
+        @if(description.invalid && description.touched) {
+        <div class="text-danger">Description required</div>
+        }
+      </div>
+      <div>
+        <label for="image" class="form-label">Image</label>
+        <input
+          type="file"
+          id="image"
+          name="image"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          ngModel
+          required
+          multiple="false"
+        />
+
+        @if (image) {
+        <div class="img" align="left">
+          <img [src]="image" alt="img" />
+        </div>
+        } @if (showErrorWhenNoImageSelected) {
+        <div class="text-danger">Image required</div>
+        }
+      </div>
+      <div align="center">
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <app-courses [courses]="courses" [deleteButton]="true" (delCourse)="deleteCourse($event)"></app-courses>
+  </div>
+</section>

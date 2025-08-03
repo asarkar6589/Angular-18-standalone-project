@@ -1,0 +1,29 @@
+<div class="row mt-5">
+  @for (course of courses; track $index) {
+  <!-- Here we have to give track, else it will not work. Now here we have to pass data from one component to other component. If we have to pass some data from parent component to child component i.e from admin component to app course component, then we have to use Input decorator & it will dynamically updates the data as well. -->
+  <div class="col-lg-4">
+    <div class="box" align="center">
+      <div align="center" class="course-image">
+        <img [src]="course.image" alt="Course Image" />
+
+        @if(deleteButton) {
+        <div>
+          <button class="btn btn-danger" (click)="deleteCourse(course)">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+        </div>
+        }
+      </div>
+
+      <h5 class="mt-3">{{ course.title }}</h5>
+
+      <p class="mt-2">
+        {{ course.description }}
+      </p>
+    </div>
+  </div>
+  } @empty {
+  <!-- If there is no course, then we can show this thing, basically empty state -->
+  <div align="center">No courses added yet</div>
+  }
+</div>

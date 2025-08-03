@@ -1,0 +1,21 @@
+.card {
+    width: 80%;
+    margin: auto;
+    margin-top: 5vh;
+
+    .card-header {
+        font-size: 1.8rem;
+    }
+
+    .img {
+        > img {
+            width: 13rem;
+            height: 13rem;
+        }
+    }
+}
+
+.text-danger {
+    color: red;
+    font-size: 0.9rem;
+}
