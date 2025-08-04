@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { StringEnum } from '../../enum/String';
 import { CoursesComponent } from '../courses/courses.component';
+import { CourseService } from '../../service/courses/course.service';
 
 export interface Course {
   title: string;
@@ -26,12 +27,14 @@ export class AdminComponent implements OnInit {
     id: undefined
   };
 
-  image: string | undefined = '';
+  private courseService = inject(CourseService);
   showErrorWhenNoImageSelected: boolean = false;
+  image: string | undefined = '';
+
   courses: Course[] = [];
 
   ngOnInit(): void {
-    this.getCoursesFromLocalStorage();
+    this.courses = this.courseService.getCoursesFromLocalStorage();
   }
 
   onSubmit(form: NgForm) {
@@ -44,7 +47,7 @@ export class AdminComponent implements OnInit {
       }
       return;
     } else {
-      this.saveCourseToLocalStorage(form.value);
+      this.courseService.saveCourseToLocalStorage(form.value, this.image);
       form.control.reset(); // It will reset the form fields.
       this.image = undefined; // Reset the cover photo
     }
@@ -64,24 +67,7 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  saveCourseToLocalStorage(formValue: any) {
-    formValue.image = this.image; // Add the image to the form value
-    formValue.id = this.courses.length + 1; // Assign a unique ID based on the current length of the courses array
-    this.courses = JSON.parse(localStorage.getItem(StringEnum.STORAGE_KEY) || '[]') as [];
-    this.courses.push(formValue);
-    this.setCoursesToLocalStorage();
-  }
-
   getCoursesFromLocalStorage() {
     this.courses = JSON.parse(localStorage.getItem(StringEnum.STORAGE_KEY) || '[]') as [];
-  }
-
-  setCoursesToLocalStorage() {
-    localStorage.setItem(StringEnum.STORAGE_KEY, JSON.stringify(this.courses));
-  }
-
-  deleteCourse(course:Course) {
-    this.courses = this.courses.filter((c:Course) => c.id !== course.id);
-    this.setCoursesToLocalStorage();
   }
 }
