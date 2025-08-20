@@ -16,12 +16,12 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
     // we are passing id because in the routes file i have given the URL as '/about/:id'
     let id = this.router.snapshot.paramMap.get('id');
-    console.log(id);
+    // console.log(id);
 
     // another way of getting the value of the id. Whenever values will be changed, it will subscribe & detect the changed value.
     this.router.params.subscribe({
       next: (data) => {
-        console.log(data['id']);
+        // console.log(data['id']);
       },
       error: (err: any) => {
         console.error('Error fetching query params:', err);

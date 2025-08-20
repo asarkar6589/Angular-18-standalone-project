@@ -13,7 +13,7 @@
           id="title"
           name="title"
           #title="ngModel"
-          [(ngModel)]="course.title"
+          [(ngModel)]="course().title"
           required
         />
         <!-- We have to import NgIf or Common module in the .ts file. But it's not the case in ngModule because everything is imported in the ngModule project. -->
@@ -30,7 +30,7 @@
           id="description"
           name="description"
           #description="ngModel"
-          [(ngModel)]="course.description"
+          [(ngModel)]="course().description"
           required
         ></textarea>
 
@@ -52,11 +52,11 @@
           multiple="false"
         />
 
-        @if (image) {
+        @if (image()) {
         <div class="img" align="left">
-          <img [src]="image" alt="img" />
+          <img [src]="image()" alt="img" />
         </div>
-        } @if (showErrorWhenNoImageSelected) {
+        } @if (showErrorWhenNoImageSelected()) {
         <div class="text-danger">Image required</div>
         }
       </div>

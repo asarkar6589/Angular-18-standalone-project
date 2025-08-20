@@ -1,5 +1,6 @@
 <div class="row mt-5">
-  @for (course of courses; track $index) {
+  <!-- @for (course of courses; track $index) { -->
+  @for (course of courses(); track $index) {
   <!-- Here we have to give track, else it will not work. Now here we have to pass data from one component to other component. If we have to pass some data from parent component to child component i.e from admin component to app course component, then we have to use Input decorator & it will dynamically updates the data as well. -->
   <div class="col-lg-4">
     <div class="box" align="center">
