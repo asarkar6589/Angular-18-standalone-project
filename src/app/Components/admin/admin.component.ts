@@ -69,9 +69,9 @@ export class AdminComponent implements OnInit {
       }
       return;
     } else {
-      // this.courseService.saveCourseToLocalStorage(form.value, this.image);
+      // this.courseService.addCourse(form.value, this.image);
 
-      this.courseService.saveCourseToLocalStorage(form.value, this.image());
+      this.courseService.addCourse(form.value, this.image());
       form.control.reset(); // It will reset the form fields.
 
       //this.image = undefined; // Reset the cover photo

@@ -1,8 +1,9 @@
-import { Component, computed, EventEmitter, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, Input, OnDestroy, Output, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CourseService } from '../../service/courses/course.service';
 import { Course } from '../admin/admin.component';
 
+// start from 6:08:14
 @Component({
   selector: 'app-courses',
   standalone: true,
@@ -10,7 +11,7 @@ import { Course } from '../admin/admin.component';
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.scss'
 })
-export class CoursesComponent implements OnInit, OnDestroy{
+export class CoursesComponent implements OnDestroy {
   // @Input() courses: Course[] = [];
 
   /*
@@ -35,7 +36,19 @@ export class CoursesComponent implements OnInit, OnDestroy{
   @Input() deleteButton: boolean = false; // for admin it will be always true.
   @Output() delCourse = new EventEmitter();
 
-  constructor(private courseService: CourseService) {}
+  constructor(private courseService: CourseService) {
+    // Now here we will be using @effect(). It will help us to automatically respond to changes in the service courses signal. But inside of the effect we cannot write any signal. But if we want to do it then we have to give one special property known as allowSignalWrites as true. We should avoid writing things inside of effect() because it's work is to react on changes not write on changes & if continious changes occur, then it might go to infinite loop.
+    effect(() => {
+      const coursesFromSignal = this.courseService.coursesSignal();
+      
+      if (coursesFromSignal !== this.courses()) {
+        this.courses.set(coursesFromSignal);
+        console.log('courses : ', this.courses());
+      }
+    }, {
+      allowSignalWrites: true
+    });
+  }
 
   /* For Understading Signals */
   a: number = 1;
@@ -58,30 +71,36 @@ export class CoursesComponent implements OnInit, OnDestroy{
     console.log(this.c1());
   }
 
-  ngOnInit(): void {
-    this.understandingSignalsWithExample();
-    // this.courses = this.courseService.getCoursesFromLocalStorage();
+  /*
+  
+    ngOnInit(): void {
+      this.understandingSignalsWithExample();
 
-    this.courses.set(this.courseService.getCoursesFromLocalStorage()); // while working with signals.
+      // this.courses = this.courseService.getCoursesFromLocalStorage();
 
-    // subscribe simply means we want to detect the value of the course if it is changed. So it will dynamically update the value if it changed. Now since the subscription is on, we also have to unsubscribe this because if we dont unsubscribe this then it will lead to memoy leakage.
-    this.coursesSub = this.courseService.courses.subscribe({
-      next: (data: Course[]) => {
-        // this.courses = data;
+      this.courses.set(this.courseService.getCoursesFromLocalStorage()); // while working with signals.
 
-        this.courses.set(data); // writable signal.
-        console.log("From Subscription");
-      },
-      error: (e) => {
-        console.log(e);
-      }
-    }); 
-  }
+      // subscribe simply means we want to detect the value of the course if it is changed. So it will dynamically update the value if it changed. Now since the subscription is on, we also have to unsubscribe this because if we dont unsubscribe this then it will lead to memoy leakage.
+
+      this.coursesSub = this.courseService.courses.subscribe({
+        next: (data: Course[]) => {
+          // this.courses = data;
+
+          this.courses.set(data); // writable signal.
+          console.log("From Subscription");
+        },
+        error: (e) => {
+          console.log(e);
+        }
+      }); 
+    }
+  
+  */
 
   ngOnDestroy(): void {
-    if (this.coursesSub) {
-      this.coursesSub.unsubscribe();
-    }
+    // if (this.coursesSub) {
+    //   this.coursesSub.unsubscribe();
+    // }
   }
 
   deleteCourse(course: Course) {
